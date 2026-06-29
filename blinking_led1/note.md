@@ -19,3 +19,14 @@ The wavelength and color of the emitted light depend on the semiconductor materi
 - Blue light: shorter wavelength, higher energy
 - Green light: medium wavelength
 - Red light: longer wavelength, lower energy
+
+f. Why Polarity Is Important
+
+An LED (Light Emitting Diode) is a diode, meaning it allows current to flow primarily in one direction.
+
+* The anode (+) should be connected toward the positive side of the circuit (the Arduino output pin when it is HIGH).
+* The cathode (-) should be connected toward ground through the current-limiting resistor.
+
+If the LED is connected in reverse (anode to ground and cathode to the Arduino pin), it is reverse-biased. Under normal Arduino voltages (5V), almost no current flows through the LED, so it does not emit light.
+
+This is because a diode's internal semiconductor junction permits current in the forward direction but blocks it in the reverse direction under normal operating conditions.
