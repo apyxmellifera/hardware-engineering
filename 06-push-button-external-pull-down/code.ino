@@ -1,4 +1,4 @@
-// 05-push-button-external-pull-up
+// 05-push-button-external-pull-down
 
 int led = 12;
 int pushButton = 8;
@@ -11,7 +11,7 @@ void setup()
 
 void loop()
 {
-  if(digitalRead(pushButton)== LOW){
+  if(digitalRead(pushButton)== HIGH){
   digitalWrite(led, HIGH);
   delay(delayTime);
   digitalWrite(led, LOW);

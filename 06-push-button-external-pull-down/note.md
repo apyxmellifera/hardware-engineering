@@ -6,7 +6,7 @@
 2. One LED
 3. One 330 Ω resistor (LED current limiting)
 4. One push button
-5. One 10 kΩ resistor (external pull-up)
+5. One 10 kΩ resistor (external pull-down)
 6. Breadboard
 7. Jumper wires
 
@@ -35,11 +35,11 @@ Arduino Output Pin → LED → 330 Ω Resistor → GND
 ```text
           +5V
            │
-        10 kΩ
+     Push Button
            │
 Arduino Input Pin
            │
-     Push Button
+        10 kΩ
            │
           GND
 ```
@@ -81,20 +81,20 @@ Unlike an LED, a push button has **no polarity**, so it may be connected in eith
 
 ---
 
-## 4. External Pull-Up Resistor
+## 4. External Pull-Down Resistor
 
-This project uses an **external pull-up resistor**.
+This project uses an **external pull-down resistor**.
 
-The **10 kΩ resistor** connects the Arduino input node to **+5 V**.
+The **10 kΩ resistor** connects the Arduino input node to **ground (0 V)**.
 
 ```text
           +5V
            │
-        10 kΩ
+     Push Button
            │
            ●──────── Arduino Input
            │
-     Push Button
+        10 kΩ
            │
           GND
 ```
@@ -105,7 +105,7 @@ The connection point (●) is shared by:
 * One end of the 10 kΩ resistor.
 * One terminal of the push button.
 
-Because the resistor continuously connects the input node to **+5 V**, the input has a stable default voltage of approximately **5 V** whenever the push button is not pressed.
+Because the resistor continuously connects the input node to ground, the input has a stable default voltage of approximately **0 V** whenever the push button is not pressed.
 
 ---
 
@@ -116,17 +116,17 @@ Because the resistor continuously connects the input node to **+5 V**, the input
 When the push button is released:
 
 * The switch is open.
-* The resistor pulls the input node to **+5 V**.
-* The Arduino input pin measures approximately **5 V**.
+* The resistor pulls the input node to ground.
+* The Arduino input pin measures approximately **0 V**.
 * The Arduino reads:
 
 ```text
-HIGH
+LOW
 ```
 
 This is the **default state**.
 
-Since the switch is open, essentially no current flows because there is no complete path between **+5 V** and ground.
+Since the switch is open, essentially no current flows because there is no complete path between +5 V and ground.
 
 ---
 
@@ -135,27 +135,27 @@ Since the switch is open, essentially no current flows because there is no compl
 When the push button is pressed:
 
 * The switch closes.
-* The input node becomes electrically connected to **ground (0 V)**.
-* The Arduino input pin measures approximately **0 V**.
+* The input node becomes electrically connected to **+5 V**.
+* The Arduino input pin measures approximately **5 V**.
 * The Arduino reads:
 
 ```text
-LOW
+HIGH
 ```
 
-A small current now flows from the positive supply through the **10 kΩ resistor**, through the closed push button, and finally to ground.
+A small current now flows from the positive supply through the closed switch and the **10 kΩ resistor** to ground.
 
-The resistor limits this current, protecting the circuit while allowing the input node to remain at approximately **0 V**.
+The resistor limits this current, protecting the circuit while allowing the input node to remain at approximately **5 V**.
 
 ---
 
-## 6. Why the Pull-Up Resistor Is Needed
+## 6. Why the Pull-Down Resistor Is Needed
 
 Digital input pins have very high input impedance.
 
-Without a pull-up or pull-down resistor, the input would float and could randomly read HIGH or LOW due to electrical noise.
+Without a pull-down or pull-up resistor, the input would float and could randomly read HIGH or LOW due to electrical noise.
 
-The pull-up resistor prevents this by providing a stable default voltage of **+5 V** whenever the push button is not pressed.
+The pull-down resistor prevents this by providing a stable default voltage of **0 V** whenever the push button is not pressed.
 
 ---
 
@@ -187,7 +187,7 @@ digitalRead(pushButton);
 
 It does **not** measure current. It simply determines whether the voltage at the input node corresponds to a logical HIGH or LOW.
 
-When the button is pressed, the input becomes **LOW**, causing the program to execute the desired action.
+When the button is pressed, the input becomes **HIGH**, causing the program to execute the desired action.
 
 The Arduino then controls the LED by changing the voltage on the output pin using:
 
@@ -206,11 +206,11 @@ This demonstrates the interaction between:
 
 ## 9. Engineering Observation
 
-This project demonstrates the use of an **external pull-up resistor**.
+This project demonstrates the use of an **external pull-down resistor**.
 
-The resistor keeps the Arduino input pin at a stable default voltage of **+5 V (HIGH)** whenever the push button is not pressed.
+The resistor keeps the Arduino input pin at a stable default voltage of **0 V (LOW)** whenever the push button is not pressed.
 
-Pressing the push button connects the input node to **ground (0 V)**, causing the Arduino to detect a **LOW** logic level.
+Pressing the push button connects the input node to **+5 V**, causing the Arduino to detect a **HIGH** logic level.
 
 This project reinforces that:
 
@@ -219,7 +219,7 @@ This project reinforces that:
 * The **software** interprets the measured voltage as HIGH or LOW and decides how the output should respond.
 * The **Arduino output pin** then supplies the appropriate output voltage to control the LED.
 
-Comparing this project with the external pull-down circuit shows that both achieve the same goal of preventing floating inputs. The only difference is the default logic state:
+Comparing this project with the external pull-up circuit shows that both achieve the same goal of preventing floating inputs. The only difference is the default logic state:
 
 * **External pull-up:** Default **HIGH**, pressed **LOW**.
 * **External pull-down:** Default **LOW**, pressed **HIGH**.
